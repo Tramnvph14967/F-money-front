@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom';
-import Address from './address'
-
+import { addressValue } from '../../ultils';
 const Option = Select;
 const { RangePicker } = DatePicker;
 
@@ -35,6 +34,7 @@ const SignupPage = () => {
     //onFinish kiểm tra đăng ký và thêm dữ liệu
     const onFinish = (values: any) => {
 
+
         //kiểm tra mật khẩu đã khớp chưa
         if (values.password === values.repassword) {
 
@@ -53,7 +53,11 @@ const SignupPage = () => {
                         setTimeout(() => { navigate('/signin') }, 2000)
                     })
                     //kiểm tra các trường giữ liệu có tồn tại chưa
-                    .catch(({ response }) => message.error({ content: response.data.error })
+                    .catch(({ response }) => {
+                        // console.log(error.response.data.message);
+                        message.warning({ content: response.data.message })
+                        alert(response.data.message)
+                    }
                     )
             }
             else {
@@ -152,12 +156,15 @@ const SignupPage = () => {
 
                         <Form.Item
                             name="address"
-                            rules={[{ required: true, message: 'Vui lòng nhập chi tiết địa chỉ' }]}
                         >
-                           
-                            <Address />
+                            <Select>
+                                {
+                                    addressValue?.map((item: any) => (
+                                        <Option value={item.address}>{item.address}</Option>
+                                    ))
+                                }
+                            </Select>
                         </Form.Item>
-
                         <Form.Item name="role" rules={[{ required: true, message: 'Vui lòng chọn đối tượng' }]}>
                             <Select
                                 placeholder="Vui lòng chọn đối tượng"
@@ -182,7 +189,7 @@ const SignupPage = () => {
                                             <Input placeholder="CCCD" />
                                         </Form.Item>
 
-                                        <p style={{ fontSize: "12px", fontStyle: "italic" }}>* Vui lòng tải lên hình ảnh CCCD/CMND</p>
+                                        {/* <p style={{ fontSize: "12px", fontStyle: "italic" }}>* Vui lòng tải lên hình ảnh CCCD/CMND</p>
 
                                         <div style={{ width: '100%', display: 'flex', textAlign: 'center', marginBottom: 20 }}>
                                             <Space direction="vertical" style={{ width: '49%', padding: 5 }} size="large">
@@ -205,7 +212,7 @@ const SignupPage = () => {
                                                     <Button icon={<UploadOutlined />}>Upload (Mặt sau)</Button>
                                                 </Upload>
                                             </Space>
-                                        </div>
+                                        </div> */}
                                     </>
                                 ) : null
                             }

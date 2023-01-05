@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { logout } from '../../features/auth/authSlice';
 import { Link } from 'react-router-dom';
-
+import jwt_decode from "jwt-decode";
 
 const Header_Client = () => {
   const navigate = useNavigate();
@@ -16,7 +16,10 @@ const Header_Client = () => {
     setActive(!isACtive)
   }
   const { inforUser, isLogin } = useAppSelector(state => state.auth)
-  console.log(inforUser);
+  const token =  localStorage.getItem('token')
+  const convertStringToken = JSON.stringify(token)
+  const decodedToken = jwt_decode<any>(convertStringToken)
+  console.log(decodedToken);
   
   const handleLogout = () => {
     dispatch(logout());
@@ -30,13 +33,13 @@ const Header_Client = () => {
         {
           key: '1',
           label: (
-            <Link to={`/accountClient/${inforUser?.details?._id}`}>Thông tin của tôi</Link>
+            <Link to={`/accountClient/${decodedToken.id}`}>Thông tin của tôi</Link>
           ),
         },
         {
           key: '2',
           label: (
-            <Link to={`/password/${inforUser?.details?._id}`}>Đổi mật khẩu</Link>
+            <Link to={`/password/${decodedToken.id}`}>Đổi mật khẩu</Link>
           ),
         },
         {
@@ -85,7 +88,7 @@ const Header_Client = () => {
               <p>
                 <Space className='text-base font-semibold text-zinc-500 bg-orange-500'>
                   <Button shape="round" >
-                    {inforUser?.details?.name}<DownOutlined />
+                    {decodedToken.username}<DownOutlined />
                   </Button>
                 </Space>
               </p>

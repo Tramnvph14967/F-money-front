@@ -28,7 +28,7 @@ const accountClient = () => {
     const { id } = useParams();
     const { users } = useAppSelector(state => state.auth)
     const data = users?.find((item: any) => item._id === id)
-    // console.log("users", data);
+    console.log("users", data);
     useEffect(() => {
         dispatch(getAll())
         form.setFieldsValue({
@@ -37,8 +37,6 @@ const accountClient = () => {
         })
 
     }, [])
-
-
     const onFinish = (values: any) => {
         values._id = id
         if (values.password === values.repassword) {
