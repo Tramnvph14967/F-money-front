@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { logout } from '../../features/auth/authSlice';
 import { Link } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
 
 
 const Header_Client = () => {
@@ -16,8 +17,10 @@ const Header_Client = () => {
     setActive(!isACtive)
   }
   const { inforUser, isLogin } = useAppSelector(state => state.auth)
-  console.log(inforUser);
-  
+  const token =  localStorage.getItem('token')
+  const convertStringToken = JSON.stringify(token)
+  const decodedToken = jwt_decode<any>(convertStringToken)
+  console.log(decodedToken);
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("token");
@@ -121,12 +124,13 @@ const Header_Client = () => {
               <p>
                 <Space className='text-base font-semibold text-zinc-500 bg-orange-500'>
                   <Button shape="round" >
-                    {inforUser?.details?.name}<DownOutlined />
+                    {decodedToken.username}<DownOutlined />
                   </Button>
                 </Space>
               </p>
             </Dropdown>
             :
+
             <div className="flex ">
               <div className="mr-2 mx-auto button w-36 h-10 bg-orange-500  cursor-pointer select-none hover:translate-y-2  hover:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-150 [box-shadow:0_4px_0_0_#1b6ff8,0_10px_0_0_#1b70f841] rounded-full  border-[1px] border-orange-400">
                 <Link to="/signin">
@@ -143,7 +147,7 @@ const Header_Client = () => {
                 </Link>
               </div>
             </div>
-          )}
+          }
         </div>
       </nav>
     </>
